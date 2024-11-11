@@ -30,14 +30,14 @@ Future<void> generateIndexFilesForDart({
   required Set<String> rootDirPaths,
   Set<String> subDirPaths = const {},
   Set<String> pathPatterns = const {},
-  required String templatePath,
+  required String templatePathOrUrl,
 }) async {
   // Notify start.
   printBlue('Starting generator. Please wait...');
   // Explore all source paths.
   final sourceFileExporer = gen.PathExplorer(
     dirPathGroups: {
-      gen.CombinedPaths(
+      gen.MatchedPathPowerset(
         rootDirPaths,
         subPaths: subDirPaths,
         pathPatterns: pathPatterns,
@@ -45,12 +45,11 @@ Future<void> generateIndexFilesForDart({
     },
   );
   final sourceFileExplorerResults = await sourceFileExporer.explore();
-
-  final template = await gen.loadFileFromPathOrUrl(templatePath);
+  final template = (await gen.FileSystemUtility.i.readFileFromPathOrUrl(templatePathOrUrl))!;
 
   // Extract insights from the dir path results.
-  final dirInsights = sourceFileExplorerResults.rootDirPathResults
-      .map((e) => gen.DirInsight(dir: e));
+  final dirInsights =
+      sourceFileExplorerResults.rootDirPathResults.map((e) => gen.DirInsight(dir: e));
 
   // Converge what was gathered to generate the output.
   await generatorConverger.converge(

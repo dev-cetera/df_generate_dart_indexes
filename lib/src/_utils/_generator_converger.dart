@@ -43,7 +43,7 @@ final generatorConverger = _GeneratorConverger(
         final outputFilePath = p.join(dirPath, outputFileName);
 
         // Write the content to the file.
-        await gen.writeFile(
+        await gen.FileSystemUtility.i.writeLocalFile(
           outputFilePath,
           output,
         );
@@ -56,5 +56,4 @@ final generatorConverger = _GeneratorConverger(
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-typedef _GeneratorConverger
-    = gen.GeneratorConverger<gen.DirInsight, Placeholders, String>;
+typedef _GeneratorConverger = gen.GeneratorConverger<gen.DirInsight, Placeholders, String>;
