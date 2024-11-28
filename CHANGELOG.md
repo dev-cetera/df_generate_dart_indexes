@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.0]
+
+- Released @ 11/2024 (UTC)
+- breaking: Improve algoritm
+
 ## [0.4.1]
 
 - Released @ 11/2024 (UTC)
