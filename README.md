@@ -1,5 +1,3 @@
-# DF - Generate Dart Indexes
-
 <a href="https://www.buymeacoffee.com/robmllze" target="_blank"><img align="right" src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 Dart & Flutter Packages by DevCetra.com & contributors.
@@ -18,7 +16,8 @@ A tool to generate index/exports files also known as barrel files for all Dart f
 1. You do not need to add this package to your pubspec.yaml file.
 2. Activate the tool by running: `dart pub global activate df_generate_dart_indexes`.
 3. Navigate to a folder in your project using the terminal (Tip: If you're using VS Code, you can right-click on a folder and select `"Open in Integrated Terminal"`).
-4. Run `genidx -s .` or just `genidx` to generate an `_index.g.dart` file at the current location `.`.
+4. Run `gen-indexes` to generate an `_index.g.dart` file at the current location.
+5. Or run `gen-indexes-ts` to generate an index files for TypeScript.
 
 ### Note:
 
@@ -26,28 +25,20 @@ Files that start with an underscore, files in folders that start with an undersc
 
 ### Generated File Example:
 
-The file barrel file will look something like this, and is generated from [this default template file](https://github.com/robmllze/df_generate_dart_indexes/blob/main/templates/template.dart.md): 
+The file barrel file will look something like this, and is generated from [this default template file](https://github.com/DevCetra/df_generate_dart_indexes/blob/main/templates/template.dart.md):
 
 ```dart
 //.title
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //
 // GENERATED - DO NOT MODIFY BY HAND
-// See: https://pub.dev/packages/df_generate_dart_indexes
+// See: https://github.com/DevCetra/df_generate_dart_indexes
 //
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
 
-// --- PUBLIC FILES ---
-export 'generate_index_files_for_dart.dart';
-export 'run_generate_index_files_for_dart_app.dart';
-
-// --- PRIVATE FILES (EXCLUDED) ---
-// export '_utils/_generator_converger.dart';
-// export '_utils/_insight_mappers.dart';
-
-// --- GENERATED FILES (EXCLUDED) ---
-// export '_index.g.dart';
+export 'hello_world.dart';
+export 'some_folder/some_file.dart';
 ```
 
 ---

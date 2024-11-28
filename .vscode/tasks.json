@@ -4,7 +4,7 @@
         {
             "label": "▶️ Refetch workflow",
             "type": "shell",
-            "command": "rm -rf .github && git clone https://github.com/robmllze/pub.dev_package_workflow.git .github && rm -rf .github/.git/"
+            "command": "rm -rf .github && git clone https://github.com/DevCetra/pub.dev_package_workflow.git .github && rm -rf .github/.git/"
         },
         {
             "label": "▶️ Publish to pub.dev",

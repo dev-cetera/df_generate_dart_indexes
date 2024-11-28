@@ -18,3 +18,8 @@
 **/.metadata
 **/.flutter-plugins
 **/.flutter-plugins-dependencies
+**/pubspec_overrides.yaml
+
+# Don't support IntelliJ.
+**/*.iml
+**/*.idea/
