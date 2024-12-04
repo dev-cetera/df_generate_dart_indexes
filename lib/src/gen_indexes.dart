@@ -19,11 +19,13 @@ import 'package:path/path.dart' as p;
 // [STEP 1] Define some constants to hold default argument values:
 const _DEFAULT_TEMPLATE_PATH_OR_URL =
     'https://raw.githubusercontent.com/robmllze/df_generate_dart_indexes/main/templates/template.dart.md';
-const _DEFAULT_OUTPUT_PATH = '{folder}.g.dart';
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-Future<void> genIndexes(List<String> args) async {
+Future<void> genIndexes(
+  List<String> args, {
+  String defaultOutputPath = '_{folder}.g.dart',
+}) async {
   // [STEP 2] Create an instance of the CliBuilder class to help us manage
   // our CLI application.
   final parser = CliParser(
@@ -32,7 +34,9 @@ Future<void> genIndexes(List<String> args) async {
         'A tool for generating index/barrel files for Dart. Ignores files that starts with underscores.',
     example: 'gen-indexes -i . -o _index.g.dart',
     params: [
-      DefaultFlags.HELP.flag,
+      DefaultFlags.HELP.flag.copyWith(
+        negatable: true,
+      ),
       DefaultOptions.INPUT_PATH.option.copyWith(
         defaultsTo: FileSystemUtility.i.currentScriptDir,
       ),
@@ -40,7 +44,7 @@ Future<void> genIndexes(List<String> args) async {
         defaultsTo: _DEFAULT_TEMPLATE_PATH_OR_URL,
       ),
       DefaultOptions.OUTPUT_PATH.option.copyWith(
-        defaultsTo: _DEFAULT_OUTPUT_PATH,
+        defaultsTo: defaultOutputPath,
       ),
     ],
   );
@@ -161,10 +165,10 @@ Future<void> genIndexes(List<String> args) async {
   }
 
   // [STEP 12] Print success!
+  spinner.stop();
   _print(
     printGreen,
     'Done!',
-    spinner,
   );
 }
 

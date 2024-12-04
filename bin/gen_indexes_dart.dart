@@ -15,5 +15,8 @@ import 'package:df_generate_dart_indexes/df_generate_dart_indexes.dart';
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 void main(List<String> args) async {
-  await genIndexesTs(args);
+  await genIndexes(
+    args,
+    defaultOutputPath: '_index.g.dart',
+  );
 }
