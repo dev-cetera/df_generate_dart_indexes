@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.3]
+
+- Released @ 12/2024 (UTC)
+- fix: Fix issue with getting current dir
+
 ## [0.5.2]
 
 - Released @ 12/2024 (UTC)
