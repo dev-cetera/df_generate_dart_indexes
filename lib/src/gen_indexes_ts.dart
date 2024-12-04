@@ -34,7 +34,7 @@ Future<void> genIndexesTs(List<String> args) async {
     params: [
       DefaultFlags.HELP.flag,
       DefaultOptions.INPUT_PATH.option.copyWith(
-        defaultsTo: FileSystemUtility.i.currentScriptDir,
+        defaultsTo: FileSystemUtility.i.currentDir,
       ),
       DefaultOptions.TEMPLATE_PATH_OR_URL.option.copyWith(
         defaultsTo: _DEFAULT_TEMPLATE_PATH_OR_URL,
@@ -64,8 +64,7 @@ Future<void> genIndexesTs(List<String> args) async {
   String outputFilePath;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    templatePathOrUrl =
-        argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
+    templatePathOrUrl = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
     outputFilePath = argResults.option(DefaultOptions.OUTPUT_PATH.name)!;
   } catch (_) {
     _print(
@@ -80,7 +79,7 @@ Future<void> genIndexesTs(List<String> args) async {
     '{folder}',
     PathUtility.i.folderName(
       p.join(
-        FileSystemUtility.i.currentScriptDir,
+        FileSystemUtility.i.currentDir,
         outputFilePath,
       ),
     ),
@@ -89,7 +88,7 @@ Future<void> genIndexesTs(List<String> args) async {
   // script directory.
   if (p.isRelative(outputFilePath)) {
     outputFilePath = p.join(
-      FileSystemUtility.i.currentScriptDir,
+      FileSystemUtility.i.currentDir,
       outputFilePath,
     );
   }
@@ -97,8 +96,7 @@ Future<void> genIndexesTs(List<String> args) async {
   // [STEP 7] Create a stream to get all files ending in .dart but not in
   // .g.dart and do not start with underscores.
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
-  final filePathStream1 =
-      filePathStream0.where((e) => _isAllowedFileName(e.path));
+  final filePathStream1 = filePathStream0.where((e) => _isAllowedFileName(e.path));
 
   final spinner = Spinner();
   spinner.start();
@@ -188,8 +186,7 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');
