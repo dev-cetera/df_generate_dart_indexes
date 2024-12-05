@@ -24,7 +24,7 @@ Future<void> genIndexes(
     title: 'DevCetra.com/df/tools',
     description:
         'A tool for generating index/barrel files for Dart. Ignores files that starts with underscores.',
-    example: 'gen-indexes -i . -o _index.g.dart',
+    example: 'gen-indexes -i .',
     params: [
       DefaultFlags.HELP.flag.copyWith(
         negatable: true,
@@ -57,34 +57,15 @@ Future<void> genIndexes(
 
   late final String inputPath;
   late final List<String> templates;
-  String outputFilePath;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
     templates = argResults.multiOption(DefaultMultiOptions.TEMPLATES.name);
-    outputFilePath = argResults.option(DefaultOptions.OUTPUT_PATH.name)!;
   } catch (_) {
     _print(
       printRed,
       'Missing required args! Use --help flag for more information.',
     );
     exit(ExitCodes.FAILURE.code);
-  }
-
-  // ---------------------------------------------------------------------------
-
-  var parent = PathUtility.i.folderName(
-    p.join(
-      FileSystemUtility.i.currentDir,
-      outputFilePath,
-    ),
-  );
-  parent = parent.startsWith('_') ? parent.substring(1) : parent;
-  outputFilePath = outputFilePath.replaceAll('{parent}', parent);
-  if (p.isRelative(outputFilePath)) {
-    outputFilePath = p.join(
-      FileSystemUtility.i.currentDir,
-      outputFilePath,
-    );
   }
 
   // ---------------------------------------------------------------------------
@@ -155,9 +136,12 @@ Future<void> genIndexes(
   );
 
   for (final entry in templateData.entries) {
-    final fileName = p.basename(entry.key).replaceAll('.md', '');
+    final fileName = p.basename(entry.key).replaceAll('.md', '').replaceAll(
+          '{basename}',
+          p.basename(inputPath),
+        );
     final template = entry.value;
-    final skipPath = p.join(inputPath, outputFilePath);
+    final skipPath = p.join(inputPath, fileName);
     final data = template.replaceData(
       {
         '___PUBLIC_EXPORTS___': _publicExports(

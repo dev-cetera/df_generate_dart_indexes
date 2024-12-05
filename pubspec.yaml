@@ -45,6 +45,6 @@ dev_dependencies:
 ## -----------------------------------------------------------------------------
 
 executables:
-  gen-indexes-dart: gen_indexes_dart
+  gen-indexes-basename: gen_indexes_basename
   gen-indexes-ts: gen_indexes_ts
   gen-indexes: gen_indexes
