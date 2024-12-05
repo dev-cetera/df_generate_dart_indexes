@@ -68,7 +68,8 @@ Future<void> genIndexes(
   String outputFilePath;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    templatePathOrUrl = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
+    templatePathOrUrl =
+        argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
     outputFilePath = argResults.option(DefaultOptions.OUTPUT_PATH.name)!;
   } catch (_) {
     _print(
@@ -192,7 +193,8 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths =
+      filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');

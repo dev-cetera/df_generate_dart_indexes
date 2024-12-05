@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.4]
+
+- Released @ 12/2024 (UTC)
+- fix: Fix output path error
+
 ## [0.5.3]
 
 - Released @ 12/2024 (UTC)
