@@ -16,36 +16,32 @@ import 'package:path/path.dart' as p;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-// [STEP 1] Define come constants to hold default argument values:
-const _DEFAULT_TEMPLATE_PATH_OR_URL =
-    'https://raw.githubusercontent.com/robmllze/df_generate_dart_indexes/main/templates/template.ts.md';
-const _OUTPUT_PATH = 'index.ts';
-
-// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-Future<void> genIndexesTs(List<String> args) async {
-  // [STEP 2] Create an instance of the CliBuilder class to help us manage
-  // our CLI application.
+Future<void> genIndexesTs(
+  List<String> args, {
+  required List<String> defaultTemplates,
+}) async {
   final parser = CliParser(
     title: 'DevCetra.com/df/tools',
     description:
         'A tool for generating index/barrel files for TypeScript. Ignores files that starts with underscores.',
-    example: 'gen-indexes-ts -i . -o index.ts',
+    example: 'gen-indexes-ts -i .',
     params: [
       DefaultFlags.HELP.flag,
       DefaultOptions.INPUT_PATH.option.copyWith(
         defaultsTo: FileSystemUtility.i.currentDir,
       ),
-      DefaultOptions.TEMPLATE_PATH_OR_URL.option.copyWith(
-        defaultsTo: _DEFAULT_TEMPLATE_PATH_OR_URL,
+      DefaultMultiOptions.TEMPLATES.multiOption.copyWith(
+        defaultsTo: defaultTemplates,
       ),
     ],
   );
 
-  // [STEP 3] Parse our arguments.
+  // ---------------------------------------------------------------------------
+
   final (argResults, argParser) = parser.parse(args);
 
-  // [STEP 4] Print help message if the user requests it, then exit.
+  // ---------------------------------------------------------------------------
+
   final help = argResults.flag(DefaultFlags.HELP.name);
   if (help) {
     _print(
@@ -55,13 +51,13 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.SUCCESS.code);
   }
 
-  // [STEP 4] Extract all the arguments we need.
+  // ---------------------------------------------------------------------------
+
   late final String inputPath;
-  late final String templatePathOrUrl;
+  late final List<String> templates;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    templatePathOrUrl =
-        argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
+    templates = argResults.multiOption(DefaultMultiOptions.TEMPLATES.name);
   } catch (_) {
     _print(
       printRed,
@@ -70,22 +66,23 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 5] Create a stream to get all files ending in .dart but not in
-  // .g.dart and do not start with underscores.
+  // ---------------------------------------------------------------------------
+
+  final spinner = Spinner();
+  spinner.start();
+
+  // ---------------------------------------------------------------------------
+
+  _print(
+    printWhite,
+    'Looking for files..',
+  );
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
     final path = p.relative(e.path, from: inputPath);
     return _isAllowedFileName(path);
   });
 
-  final spinner = Spinner();
-  spinner.start();
-
-  // [STEP 6] Look for files in the input directory.
-  _print(
-    printWhite,
-    'Looking for files..',
-  );
   List<FilePathExplorerFinding> findings;
   try {
     findings = await filePathStream1.toList();
@@ -106,58 +103,69 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.SUCCESS.code);
   }
 
-  // [STEP 7] Create a replacement map for the template, to replace
-  // placeholders in the template with the actual values. We also want to skip
-  // the output file from being added to the exports file.
-  final skipPath = p.join(inputPath, _OUTPUT_PATH);
-  final replacementMap = {
-    '___PUBLIC_EXPORTS___': _publicExports(
-      inputPath,
-      findings.map((e) => e.path).where((e) => e != skipPath),
-      (e) => true,
-      (e) => 'export * from \'./$e\';',
-    ),
-  };
+  // ---------------------------------------------------------------------------
+
+  final templateData = <String, String>{};
+  for (final template in templates) {
+    _print(
+      printWhite,
+      'Reading template at: $template...',
+    );
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(
+      template,
+    );
+
+    if (result.isErr) {
+      spinner.stop();
+      _print(
+        printRed,
+        ' Failed to read template!',
+      );
+      exit(ExitCodes.FAILURE.code);
+    }
+    templateData[template] = result.unwrap();
+  }
+
+  // ---------------------------------------------------------------------------
 
   _print(
     printWhite,
-    'Reading template at: $templatePathOrUrl...',
+    'Generating...',
     spinner,
   );
 
-  // [STEP 8] Read the template file.
-  final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(
-    templatePathOrUrl,
-  );
-  if (result.isErr) {
+  for (final entry in templateData.entries) {
+    final fileName = p.basename(entry.key).replaceAll('.md', '');
+    final template = entry.value;
+    final skipPath = p.join(inputPath, fileName);
+    final data = template.replaceData(
+      {
+        '___PUBLIC_EXPORTS___': _publicExports(
+          inputPath,
+          findings.map((e) => e.path).where((e) => e != skipPath),
+          (e) => true,
+          (e) => 'export * from \'./$e\';',
+        ),
+      },
+    );
     _print(
-      printRed,
-      'Failed to read template!',
+      printWhite,
+      'Writing output to $fileName...',
       spinner,
     );
-    exit(ExitCodes.FAILURE.code);
+    try {
+      await FileSystemUtility.i.writeLocalFile(fileName, data);
+    } catch (e) {
+      _print(
+        printRed,
+        'Failed to write at: $fileName',
+        spinner,
+      );
+      exit(ExitCodes.FAILURE.code);
+    }
   }
 
-  // [STEP 9] Replace the placeholders in the template with the actual values.
-  final output = result.unwrap().replaceData(replacementMap);
-
-  _print(
-    printWhite,
-    'Writing output to $_OUTPUT_PATH...',
-    spinner,
-  );
-
-  // [STEP 10] Write the output file.
-  try {
-    await FileSystemUtility.i.writeLocalFile(_OUTPUT_PATH, output);
-  } catch (e) {
-    _print(
-      printRed,
-      'Failed to write at: $_OUTPUT_PATH',
-      spinner,
-    );
-    exit(ExitCodes.FAILURE.code);
-  }
+  // ---------------------------------------------------------------------------
 
   // [STEP 11] Print success!
   spinner.stop();
@@ -185,8 +193,7 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');
