@@ -7,5 +7,7 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
 
-export 'hello_world.dart';
-export 'some_folder/some_file.dart';
+export './screens/welcome_screen/widget.dart';
+export './screens/home_screen/widget.dart';
+export './widgets/my_button.dart';
+export './widgets/my_title_text.dart';
