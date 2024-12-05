@@ -68,8 +68,7 @@ Future<void> genIndexes(
   String outputFilePath;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    templatePathOrUrl =
-        argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
+    templatePathOrUrl = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
     outputFilePath = argResults.option(DefaultOptions.OUTPUT_PATH.name)!;
   } catch (_) {
     _print(
@@ -107,21 +106,40 @@ Future<void> genIndexes(
 
   final spinner = Spinner();
   spinner.start();
+
+  // [STEP 8] Look for files in the input directory.
   _print(
     printWhite,
-    'Looking for Dart files...',
-    spinner,
+    'Looking for files..',
   );
-
-  // [STEP 8] Create a replacement map for the template, to replace
+  List<FilePathExplorerFinding> findings;
+  try {
+    findings = await filePathStream1.toList();
+  } catch (e) {
+    _print(
+      printRed,
+      'Failed to read file tree!',
+      spinner,
+    );
+    exit(ExitCodes.FAILURE.code);
+  }
+  if (findings.isEmpty) {
+    spinner.stop();
+    _print(
+      printYellow,
+      'No files found in $inputPath!',
+    );
+    exit(ExitCodes.SUCCESS.code);
+  }
+  
+  // [STEP 9] Create a replacement map for the template, to replace
   // placeholders in the template with the actual values. We also want to skip
   // the output file from being added to the exports file.
   final skipPath = p.join(inputPath, outputFilePath);
-  final exportableFilePaths = await filePathStream1.toList();
   final replacementMap = {
     '___PUBLIC_EXPORTS___': _publicExports(
       inputPath,
-      exportableFilePaths.map((e) => e.path).where((e) => e != skipPath),
+      findings.map((e) => e.path).where((e) => e != skipPath),
       (e) => true,
       (e) => 'export \'./$e\';',
     ),
@@ -133,7 +151,7 @@ Future<void> genIndexes(
     spinner,
   );
 
-  // [STEP 9] Read the template file.
+  // [STEP 10] Read the template file.
   final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(
     templatePathOrUrl,
   );
@@ -146,7 +164,7 @@ Future<void> genIndexes(
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 10] Replace the placeholders in the template with the actual values.
+  // [STEP 11] Replace the placeholders in the template with the actual values.
   final output = result.unwrap().replaceData(replacementMap);
 
   _print(
@@ -155,7 +173,7 @@ Future<void> genIndexes(
     spinner,
   );
 
-  // [STEP 11] Write the output file.
+  // [STEP 12] Write the output file.
   try {
     await FileSystemUtility.i.writeLocalFile(outputFilePath, output);
   } catch (e) {
@@ -167,7 +185,7 @@ Future<void> genIndexes(
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 12] Print success!
+  // [STEP 13] Print success!
   spinner.stop();
   _print(
     printGreen,
@@ -193,8 +211,7 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');

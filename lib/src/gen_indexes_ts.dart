@@ -60,8 +60,7 @@ Future<void> genIndexesTs(List<String> args) async {
   late final String templatePathOrUrl;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    templatePathOrUrl =
-        argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
+    templatePathOrUrl = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
   } catch (_) {
     _print(
       printRed,
@@ -80,21 +79,40 @@ Future<void> genIndexesTs(List<String> args) async {
 
   final spinner = Spinner();
   spinner.start();
+
+  // [STEP 6] Look for files in the input directory.
   _print(
     printWhite,
-    'Looking for TypeScript files...',
-    spinner,
+    'Looking for files..',
   );
+  List<FilePathExplorerFinding> findings;
+  try {
+    findings = await filePathStream1.toList();
+  } catch (e) {
+    _print(
+      printRed,
+      'Failed to read file tree!',
+      spinner,
+    );
+    exit(ExitCodes.FAILURE.code);
+  }
+  if (findings.isEmpty) {
+    spinner.stop();
+    _print(
+      printYellow,
+      'No files found in $inputPath!',
+    );
+    exit(ExitCodes.SUCCESS.code);
+  }
 
-  // [STEP 6] Create a replacement map for the template, to replace
+  // [STEP 7] Create a replacement map for the template, to replace
   // placeholders in the template with the actual values. We also want to skip
   // the output file from being added to the exports file.
   final skipPath = p.join(inputPath, _OUTPUT_PATH);
-  final exportableFilePaths = await filePathStream1.toList();
   final replacementMap = {
     '___PUBLIC_EXPORTS___': _publicExports(
       inputPath,
-      exportableFilePaths.map((e) => e.path).where((e) => e != skipPath),
+      findings.map((e) => e.path).where((e) => e != skipPath),
       (e) => true,
       (e) => 'export * from \'./$e\';',
     ),
@@ -106,7 +124,7 @@ Future<void> genIndexesTs(List<String> args) async {
     spinner,
   );
 
-  // [STEP 7] Read the template file.
+  // [STEP 8] Read the template file.
   final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(
     templatePathOrUrl,
   );
@@ -119,7 +137,7 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 8] Replace the placeholders in the template with the actual values.
+  // [STEP 9] Replace the placeholders in the template with the actual values.
   final output = result.unwrap().replaceData(replacementMap);
 
   _print(
@@ -128,7 +146,7 @@ Future<void> genIndexesTs(List<String> args) async {
     spinner,
   );
 
-  // [STEP 9] Write the output file.
+  // [STEP 10] Write the output file.
   try {
     await FileSystemUtility.i.writeLocalFile(_OUTPUT_PATH, output);
   } catch (e) {
@@ -140,7 +158,7 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 10] Print success!
+  // [STEP 11] Print success!
   spinner.stop();
   _print(
     printGreen,
@@ -166,8 +184,7 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');
