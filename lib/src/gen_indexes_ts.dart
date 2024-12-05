@@ -18,8 +18,8 @@ import 'package:path/path.dart' as p;
 
 // [STEP 1] Define come constants to hold default argument values:
 const _DEFAULT_TEMPLATE_PATH_OR_URL =
-    'https://raw.githubusercontent.com/robmllze/df_generate_dart_indexes/main/templates/template.dart.md';
-const _DEFAULT_OUTPUT_PATH = 'index.ts';
+    'https://raw.githubusercontent.com/robmllze/df_generate_dart_indexes/main/templates/template.ts.md';
+const _OUTPUT_PATH = 'index.ts';
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
@@ -39,9 +39,6 @@ Future<void> genIndexesTs(List<String> args) async {
       DefaultOptions.TEMPLATE_PATH_OR_URL.option.copyWith(
         defaultsTo: _DEFAULT_TEMPLATE_PATH_OR_URL,
       ),
-      DefaultOptions.OUTPUT_PATH.option.copyWith(
-        defaultsTo: _DEFAULT_OUTPUT_PATH,
-      ),
     ],
   );
 
@@ -58,15 +55,12 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.SUCCESS.code);
   }
 
-  // [STEP 5] Extract all the arguments we need.
+  // [STEP 4] Extract all the arguments we need.
   late final String inputPath;
   late final String templatePathOrUrl;
-  String outputFilePath;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    templatePathOrUrl =
-        argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
-    outputFilePath = argResults.option(DefaultOptions.OUTPUT_PATH.name)!;
+    templatePathOrUrl = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
   } catch (_) {
     _print(
       printRed,
@@ -75,30 +69,13 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 6] Decide on the output file path.
-  outputFilePath = outputFilePath.replaceAll(
-    '{folder}',
-    PathUtility.i.folderName(
-      p.join(
-        FileSystemUtility.i.currentDir,
-        outputFilePath,
-      ),
-    ),
-  );
-  // If the output file path is relative, then make it relative to the current
-  // script directory.
-  if (p.isRelative(outputFilePath)) {
-    outputFilePath = p.join(
-      FileSystemUtility.i.currentDir,
-      outputFilePath,
-    );
-  }
-
-  // [STEP 7] Create a stream to get all files ending in .dart but not in
+  // [STEP 5] Create a stream to get all files ending in .dart but not in
   // .g.dart and do not start with underscores.
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
-  final filePathStream1 =
-      filePathStream0.where((e) => _isAllowedFileName(e.path));
+  final filePathStream1 = filePathStream0.where((e) {
+    final path = p.relative(e.path, from: inputPath);
+    return _isAllowedFileName(path);
+  });
 
   final spinner = Spinner();
   spinner.start();
@@ -108,10 +85,10 @@ Future<void> genIndexesTs(List<String> args) async {
     spinner,
   );
 
-  // [STEP 8] Create a replacement map for the template, to replace
+  // [STEP 6] Create a replacement map for the template, to replace
   // placeholders in the template with the actual values. We also want to skip
   // the output file from being added to the exports file.
-  final skipPath = p.relative(outputFilePath, from: inputPath);
+  final skipPath = p.join(inputPath, _OUTPUT_PATH);
   final exportableFilePaths = await filePathStream1.toList();
   final replacementMap = {
     '___PUBLIC_EXPORTS___': _publicExports(
@@ -128,7 +105,7 @@ Future<void> genIndexesTs(List<String> args) async {
     spinner,
   );
 
-  // [STEP 9] Read the template file.
+  // [STEP 7] Read the template file.
   final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(
     templatePathOrUrl,
   );
@@ -141,28 +118,28 @@ Future<void> genIndexesTs(List<String> args) async {
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 10] Replace the placeholders in the template with the actual values.
+  // [STEP 8] Replace the placeholders in the template with the actual values.
   final output = result.unwrap().replaceData(replacementMap);
 
   _print(
     printWhite,
-    'Writing output to $outputFilePath...',
+    'Writing output to $_OUTPUT_PATH...',
     spinner,
   );
 
-  // [STEP 11] Write the output file.
+  // [STEP 9] Write the output file.
   try {
-    await FileSystemUtility.i.writeLocalFile(outputFilePath, output);
+    await FileSystemUtility.i.writeLocalFile(_OUTPUT_PATH, output);
   } catch (e) {
     _print(
       printRed,
-      'Failed to write at: $outputFilePath',
+      'Failed to write at: $_OUTPUT_PATH',
       spinner,
     );
     exit(ExitCodes.FAILURE.code);
   }
 
-  // [STEP 12] Print success!
+  // [STEP 10] Print success!
   spinner.stop();
   _print(
     printGreen,
@@ -188,8 +165,7 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');

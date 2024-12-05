@@ -68,8 +68,7 @@ Future<void> genIndexes(
   String outputFilePath;
   try {
     inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
-    templatePathOrUrl =
-        argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
+    templatePathOrUrl = argResults.option(DefaultOptions.TEMPLATE_PATH_OR_URL.name)!;
     outputFilePath = argResults.option(DefaultOptions.OUTPUT_PATH.name)!;
   } catch (_) {
     _print(
@@ -80,15 +79,14 @@ Future<void> genIndexes(
   }
 
   // [STEP 6] Decide on the output file path.
-  outputFilePath = outputFilePath.replaceAll(
-    '{folder}',
-    PathUtility.i.folderName(
-      p.join(
-        FileSystemUtility.i.currentDir,
-        outputFilePath,
-      ),
+  var folder = PathUtility.i.folderName(
+    p.join(
+      FileSystemUtility.i.currentDir,
+      outputFilePath,
     ),
   );
+  folder = folder.startsWith('_') ? folder.substring(1) : folder;
+  outputFilePath = outputFilePath.replaceAll('{folder}', folder);
   // If the output file path is relative, then make it relative to the current
   // script directory.
   if (p.isRelative(outputFilePath)) {
@@ -101,8 +99,10 @@ Future<void> genIndexes(
   // [STEP 7] Create a stream to get all files ending in .dart but not in
   // .g.dart and do not start with underscores.
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
-  final filePathStream1 =
-      filePathStream0.where((e) => _isAllowedFileName(e.path));
+  final filePathStream1 = filePathStream0.where((e) {
+    final path = p.relative(e.path, from: inputPath);
+    return _isAllowedFileName(path);
+  });
 
   final spinner = Spinner();
   spinner.start();
@@ -115,7 +115,7 @@ Future<void> genIndexes(
   // [STEP 8] Create a replacement map for the template, to replace
   // placeholders in the template with the actual values. We also want to skip
   // the output file from being added to the exports file.
-  final skipPath = p.relative(outputFilePath, from: inputPath);
+  final skipPath = p.join(inputPath, outputFilePath);
   final exportableFilePaths = await filePathStream1.toList();
   final replacementMap = {
     '___PUBLIC_EXPORTS___': _publicExports(
@@ -192,8 +192,7 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');
