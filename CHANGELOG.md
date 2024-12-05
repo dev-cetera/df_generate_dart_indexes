@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.5]
+
+- Released @ 12/2024 (UTC)
+- refactor: Refactor file search
+
 ## [0.5.4]
 
 - Released @ 12/2024 (UTC)
