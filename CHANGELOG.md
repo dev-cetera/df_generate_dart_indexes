@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.7]
+
+- Released @ 12/2024 (UTC)
+- chore: Internal updates and update readme
+
 ## [0.5.5]
 
 - Released @ 12/2024 (UTC)
