@@ -1,7 +1,7 @@
 //.title
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //
-// Dart/Flutter (DF) Packages by DevCetra.com & contributors. The use of this
+// Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
 // source code is governed by an MIT-style license described in the LICENSE
 // file located in this project's root directory.
 //
@@ -21,7 +21,7 @@ Future<void> genIndexes(
   required List<String> defaultTemplates,
 }) async {
   final parser = CliParser(
-    title: 'DevCetra.com/df/tools',
+    title: 'dev-cetera.com/df/tools',
     description:
         'A tool for generating index/barrel files for Dart. Ignores files that starts with underscores.',
     example: 'gen-indexes -i .',
@@ -197,16 +197,16 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');
 }
 
 bool _isAllowedFileName(String e) {
-  return !e.startsWith('_') &&
-      !e.contains('${p.separator}_') &&
-      !e.endsWith('.g.dart') &&
-      e.endsWith('.dart');
+  final lc = e.toLowerCase();
+  return !lc.startsWith('_') &&
+      !lc.contains('${p.separator}_') &&
+      !lc.endsWith('.g.dart') &&
+      lc.endsWith('.dart');
 }

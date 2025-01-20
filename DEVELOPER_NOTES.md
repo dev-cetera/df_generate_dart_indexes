@@ -18,7 +18,7 @@
 
 ## Enabling GitHub Workflow
 
-https://github.com/DevCetra/YOUR_PROJECT_NAME/settings/actions
+https://github.com/dev-cetera/YOUR_PROJECT_NAME/settings/actions
 
 ## Public Repo Setup
 
@@ -29,7 +29,7 @@ git init
 git add .
 git commit -m "Initial commit"
 gh repo create df_generate_d --public
-git remote add origin https://github.com/DevCetra/YOUR_PROJECT_NAME.git
+git remote add origin https://github.com/dev-cetera/YOUR_PROJECT_NAME.git
 git push -u origin main
 ```
 
@@ -50,7 +50,7 @@ git push -u origin main
 
 ```bash
 rm -rf .github/
-git clone https://github.com/DevCetra/pub.dev_package_workflow.git .github
+git clone https://github.com/dev-cetera/pub.dev_package_workflow.git .github
 rm -rf .github/.git
 ```
 
@@ -67,6 +67,6 @@ find . -name '.DS_Store' -type f -delete
 
 ```bash
 rmdir /s /q .github/
-git clone https://github.com/DevCetra/pub.dev_package_workflow.git .github
+git clone https://github.com/dev-cetera/pub.dev_package_workflow.git .github
 rmdir /s /q .github/.git
 ```

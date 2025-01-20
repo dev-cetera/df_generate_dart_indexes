@@ -1,7 +1,7 @@
 //.title
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //
-// Dart/Flutter (DF) Packages by DevCetra.com & contributors. The use of this
+// Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
 // source code is governed by an MIT-style license described in the LICENSE
 // file located in this project's root directory.
 //
@@ -56,15 +56,11 @@ Set<_VersionSection> extractSections(String contents) {
   final results = <_VersionSection>{};
   for (var i = 0; i < allVersionMatches.length; i++) {
     final start = allVersionMatches[i].end;
-    final end = i + 1 < allVersionMatches.length
-        ? allVersionMatches[i + 1].start
-        : contents.length;
+    final end = i + 1 < allVersionMatches.length ? allVersionMatches[i + 1].start : contents.length;
     final sectionContents = contents.substring(start, end).trim();
-    final lines =
-        sectionContents.split('\n').where((line) => line.isNotEmpty).toList();
-    final version = allVersionMatches[i]
-        .group(0)!
-        .substring(4, allVersionMatches[i].group(0)!.length - 1);
+    final lines = sectionContents.split('\n').where((line) => line.isNotEmpty).toList();
+    final version =
+        allVersionMatches[i].group(0)!.substring(4, allVersionMatches[i].group(0)!.length - 1);
     var releasedAt = DateTime.now().toUtc();
     final updates = <String>{};
     final old = lines
@@ -140,8 +136,7 @@ int compareVersions(String version1, String version2) {
   List<int> parseVersion(String version) {
     // Split by the '+' first to handle the build number
     final parts = version.split('+');
-    final versionParts =
-        parts[0].split('.').map(int.tryParse).map((e) => e ?? 0).toList();
+    final versionParts = parts[0].split('.').map(int.tryParse).map((e) => e ?? 0).toList();
     // Add the build number as the last part (if it exists)
     if (parts.length > 1) {
       versionParts.add(int.tryParse(parts[1]) ?? 0);

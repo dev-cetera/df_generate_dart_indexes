@@ -18,7 +18,7 @@ cd your_project
 **2. Clone this repo into a `.github/` folder:**
 
 ```zsh
-git clone https://github.com/DevCetra/pub.dev_package_workflow.git .github
+git clone https://github.com/dev-cetera/pub.dev_package_workflow.git .github
 ```
 
 **3. Remove the `/.git` folder to include it to your project:**
