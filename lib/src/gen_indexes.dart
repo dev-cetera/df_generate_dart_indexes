@@ -112,11 +112,13 @@ Future<void> genIndexes(
       printWhite,
       'Reading template at: $template...',
     );
-    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(
-      template,
-    );
+    final result = await MdTemplateUtility.i
+        .readTemplateFromPathOrUrl(
+          template,
+        )
+        .value;
 
-    if (result.isErr) {
+    if (result.isErr()) {
       spinner.stop();
       _print(
         printRed,
@@ -197,7 +199,8 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths = filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths =
+      filePaths.map((e) => p.relative(e, from: inputPath));
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');
