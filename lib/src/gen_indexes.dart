@@ -121,7 +121,10 @@ Future<void> genIndexes(
         inputPath,
         findings.map((e) => e.path).where((e) => e != skipPath),
         (e) => true,
-        (e) => 'export \'./$e\';',
+        (e) {
+          final unixPath = p.split(e).join('/');
+          return 'export \'./$unixPath\';';
+        },
       ),
     });
 
