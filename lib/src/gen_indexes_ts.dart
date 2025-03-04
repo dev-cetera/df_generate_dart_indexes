@@ -44,10 +44,7 @@ Future<void> genIndexesTs(
 
   final help = argResults.flag(DefaultFlags.HELP.name);
   if (help) {
-    _print(
-      printCyan,
-      parser.getInfo(argParser),
-    );
+    _print(printCyan, parser.getInfo(argParser));
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -73,10 +70,7 @@ Future<void> genIndexesTs(
 
   // ---------------------------------------------------------------------------
 
-  _print(
-    printWhite,
-    'Looking for files..',
-  );
+  _print(printWhite, 'Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
     print(e);
@@ -88,19 +82,12 @@ Future<void> genIndexesTs(
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(
-      printRed,
-      'Failed to read file tree!',
-      spinner,
-    );
+    _print(printRed, 'Failed to read file tree!', spinner);
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
     spinner.stop();
-    _print(
-      printYellow,
-      'No files found in $inputPath!',
-    );
+    _print(printYellow, 'No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -108,22 +95,13 @@ Future<void> genIndexesTs(
 
   final templateData = <String, String>{};
   for (final template in templates) {
-    _print(
-      printWhite,
-      'Reading template at: $template...',
-    );
-    final result = await MdTemplateUtility.i
-        .readTemplateFromPathOrUrl(
-          template,
-        )
-        .value;
+    _print(printWhite, 'Reading template at: $template...');
+    final result =
+        await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       spinner.stop();
-      _print(
-        printRed,
-        ' Failed to read template!',
-      );
+      _print(printRed, ' Failed to read template!');
       exit(ExitCodes.FAILURE.code);
     }
     templateData[template] = result.unwrap();
@@ -131,39 +109,25 @@ Future<void> genIndexesTs(
 
   // ---------------------------------------------------------------------------
 
-  _print(
-    printWhite,
-    'Generating...',
-    spinner,
-  );
+  _print(printWhite, 'Generating...', spinner);
 
   for (final entry in templateData.entries) {
     final fileName = p.basename(entry.key).replaceAll('.md', '');
     final template = entry.value;
     final skipPath = p.join(inputPath, fileName);
-    final data = template.replaceData(
-      {
-        '___PUBLIC_EXPORTS___': _publicExports(
-          inputPath,
-          findings.map((e) => e.path).where((e) => e != skipPath),
-          (e) => true,
-          (e) => 'export * from \'./$e\';',
-        ),
-      },
-    );
-    _print(
-      printWhite,
-      'Writing output to $fileName...',
-      spinner,
-    );
+    final data = template.replaceData({
+      '___PUBLIC_EXPORTS___': _publicExports(
+        inputPath,
+        findings.map((e) => e.path).where((e) => e != skipPath),
+        (e) => true,
+        (e) => 'export * from \'./$e\';',
+      ),
+    });
+    _print(printWhite, 'Writing output to $fileName...', spinner);
     try {
       await FileSystemUtility.i.writeLocalFile(fileName, data);
     } catch (e) {
-      _print(
-        printRed,
-        'Failed to write at: $fileName',
-        spinner,
-      );
+      _print(printRed, 'Failed to write at: $fileName', spinner);
       exit(ExitCodes.FAILURE.code);
     }
   }
@@ -172,19 +136,12 @@ Future<void> genIndexesTs(
 
   // [STEP 11] Print success!
   spinner.stop();
-  _print(
-    printGreen,
-    'Done!',
-  );
+  _print(printGreen, 'Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-void _print(
-  void Function(String) print,
-  String message, [
-  Spinner? spinner,
-]) {
+void _print(void Function(String) print, String message, [Spinner? spinner]) {
   spinner?.stop();
   print('[gen-indexes-ts] $message');
   spinner?.start();
@@ -196,8 +153,9 @@ String _publicExports(
   bool Function(String filePath) test,
   String Function(String baseName) statementBuilder,
 ) {
-  final relativeFilePaths =
-      filePaths.map((e) => p.relative(e, from: inputPath));
+  final relativeFilePaths = filePaths.map(
+    (e) => p.relative(e, from: inputPath),
+  );
   final exportFilePaths = relativeFilePaths.where((e) => test(e));
   final statements = exportFilePaths.map(statementBuilder);
   return statements.join('\n');

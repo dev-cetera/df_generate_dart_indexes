@@ -20,8 +20,5 @@ void main(
     'https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/templates/_{basename}.g.dart.md',
   ],
 }) async {
-  await genIndexes(
-    args,
-    defaultTemplates: defaultTemplates,
-  );
+  await genIndexes(args, defaultTemplates: defaultTemplates);
 }
