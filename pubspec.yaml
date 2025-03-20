@@ -12,7 +12,7 @@
 
 name: df_generate_dart_indexes
 description: A tool to generate index/exports files also known as barrel files for all Dart files in a directory.
-version: 0.5.11
+version: 0.5.12
 homepage: https://dev-cetera.com
 repository: https://github.com/dev-cetera/df_generate_dart_indexes
 funding:

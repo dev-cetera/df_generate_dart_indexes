@@ -71,8 +71,7 @@ Set<_VersionSection> extractSections(String contents) {
         .where((e) => e.isNotEmpty);
     for (var line in old) {
       if (line.contains('Released @')) {
-        final temp = line.split('Released @').last.trim();
-        releasedAt = DateTime.tryParse(temp) ?? releasedAt;
+        releasedAt = parseReleaseDate(line);
       } else {
         updates.add(line);
       }
@@ -154,4 +153,20 @@ int compareVersions(String version1, String version2) {
     if (part1 < part2) return -1;
   }
   return 0;
+}
+
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+DateTime parseReleaseDate(String line) {
+  if (line.contains('Released @')) {
+    final temp = line.split('Released @').last.trim().replaceAll(' (UTC)', '');
+    final parts = temp.split('/');
+    if (parts.length == 2) {
+      final month = int.tryParse(parts[0]) ?? 1;
+      final year = int.tryParse(parts[1]) ?? DateTime.now().year;
+      return DateTime.utc(year, month);
+    }
+  }
+
+  return DateTime.now().toUtc();
 }

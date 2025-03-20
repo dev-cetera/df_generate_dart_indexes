@@ -12,6 +12,9 @@
 
 import 'package:df_gen_core/df_gen_core.dart';
 
+// ignore: implementation_imports
+import 'package:df_config/src/_etc/replace_data.dart';
+
 import 'package:path/path.dart' as p;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -62,7 +65,7 @@ Future<void> genIndexesTs(
     );
     exit(ExitCodes.FAILURE.code);
   }
-
+  
   // ---------------------------------------------------------------------------
 
   final spinner = Spinner();
@@ -96,8 +99,7 @@ Future<void> genIndexesTs(
   final templateData = <String, String>{};
   for (final template in templates) {
     _print(printWhite, 'Reading template at: $template...');
-    final result =
-        await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       spinner.stop();
@@ -115,6 +117,7 @@ Future<void> genIndexesTs(
     final fileName = p.basename(entry.key).replaceAll('.md', '');
     final template = entry.value;
     final skipPath = p.join(inputPath, fileName);
+    // ignore: invalid_use_of_internal_member
     final data = template.replaceData({
       '___PUBLIC_EXPORTS___': _publicExports(
         inputPath,
