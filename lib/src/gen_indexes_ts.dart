@@ -12,9 +12,6 @@
 
 import 'package:df_gen_core/df_gen_core.dart';
 
-// ignore: implementation_imports
-import 'package:df_config/src/_etc/replace_data.dart';
-
 import 'package:path/path.dart' as p;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -99,8 +96,7 @@ Future<void> genIndexesTs(
   final templateData = <String, String>{};
   for (final template in templates) {
     _print(printWhite, 'Reading template at: $template...');
-    final result =
-        await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       spinner.stop();
