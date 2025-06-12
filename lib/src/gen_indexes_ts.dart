@@ -46,7 +46,7 @@ Future<void> genIndexesTs(
 
   final help = argResults.flag(DefaultFlags.HELP.name);
   if (help) {
-    _print(Glog.printCyan, parser.getInfo(argParser));
+    _print(Log.printCyan, parser.getInfo(argParser));
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -59,7 +59,7 @@ Future<void> genIndexesTs(
     templates = argResults.multiOption(DefaultMultiOptions.TEMPLATES.name);
   } catch (_) {
     _print(
-      Glog.printRed,
+      Log.printRed,
       'Missing required args! Use --help flag for more information.',
     );
     exit(ExitCodes.FAILURE.code);
@@ -72,7 +72,7 @@ Future<void> genIndexesTs(
 
   // ---------------------------------------------------------------------------
 
-  _print(Glog.printWhite, 'Looking for files..');
+  _print(Log.printWhite, 'Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
     print(e);
@@ -84,12 +84,12 @@ Future<void> genIndexesTs(
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(Glog.printRed, 'Failed to read file tree!', spinner);
+    _print(Log.printRed, 'Failed to read file tree!', spinner);
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
     spinner.stop();
-    _print(Glog.printYellow, 'No files found in $inputPath!');
+    _print(Log.printYellow, 'No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -97,14 +97,12 @@ Future<void> genIndexesTs(
 
   final templateData = <String, String>{};
   for (final template in templates) {
-    _print(Glog.printWhite, 'Reading template at: $template...');
-    final result = await MdTemplateUtility.i
-        .readTemplateFromPathOrUrl(template)
-        .value;
+    _print(Log.printWhite, 'Reading template at: $template...');
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       spinner.stop();
-      _print(Glog.printRed, ' Failed to read template!');
+      _print(Log.printRed, ' Failed to read template!');
       exit(ExitCodes.FAILURE.code);
     }
     templateData[template] = result.unwrap();
@@ -112,7 +110,7 @@ Future<void> genIndexesTs(
 
   // ---------------------------------------------------------------------------
 
-  _print(Glog.printWhite, 'Generating...', spinner);
+  _print(Log.printWhite, 'Generating...', spinner);
 
   for (final entry in templateData.entries) {
     final fileName = p.basename(entry.key).replaceAll('.md', '');
@@ -127,11 +125,11 @@ Future<void> genIndexesTs(
         (e) => 'export * from \'./$e\';',
       ),
     });
-    _print(Glog.printWhite, 'Writing output to $fileName...', spinner);
+    _print(Log.printWhite, 'Writing output to $fileName...', spinner);
     try {
       await FileSystemUtility.i.writeLocalFile(fileName, data);
     } catch (e) {
-      _print(Glog.printRed, 'Failed to write at: $fileName', spinner);
+      _print(Log.printRed, 'Failed to write at: $fileName', spinner);
       exit(ExitCodes.FAILURE.code);
     }
   }
@@ -140,7 +138,7 @@ Future<void> genIndexesTs(
 
   // [STEP 11] Print success!
   spinner.stop();
-  _print(Glog.printGreen, 'Done!');
+  _print(Log.printGreen, 'Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
