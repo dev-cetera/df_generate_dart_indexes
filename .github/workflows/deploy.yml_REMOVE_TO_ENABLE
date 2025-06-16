@@ -1,0 +1,68 @@
+##.title
+## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+##
+## Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
+## source code is governed by an MIT-style license described in the LICENSE
+## file located in this project's root directory.
+##
+## See: https://opensource.org/license/mit
+##
+## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+##.title~
+
+name: Deploy hosted_example to GitHub Pages
+
+## -----------------------------------------------------------------------------
+
+on:
+  push:
+    branches:
+      - main
+
+## -----------------------------------------------------------------------------
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: "3.x"
+
+      # Install all project dependencies
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: ./hosted_example
+
+      # Enable Flutter web support
+      - name: Enable Flutter web support
+        run: flutter config --enable-web
+        working-directory: ./hosted_example
+
+      # Build the web app in /hosted_example/
+      - name: Build web app in /hosted_example/
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+        working-directory: ./hosted_example
+
+      # Necessary
+      - name: Create .nojekyll
+        run: touch hosted_example/build/web/.nojekyll
+
+      # Necessary
+      - name: Create 404.html for SPA routing
+        run: cp hosted_example/build/web/index.html hosted_example/build/web/404.html
+
+      # Deploy the app to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./hosted_example/build/web
+          keep_files: false
