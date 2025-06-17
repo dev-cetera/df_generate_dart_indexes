@@ -25,4 +25,4 @@
 **/*.idea/
 
 # custom_lint
-custom_lint.log
+**/custom_lint.log
