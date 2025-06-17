@@ -16,7 +16,7 @@ import 'dart:io';
 
 void main(List<String> args) {
   final version = args.isNotEmpty ? args[0] : '0.1.0';
-  final comitMesssage = args.length > 1 ? args[1].replaceFirst('+', '') : '';
+  final comitMesssage = args.length > 1 ? args[1].replaceFirst(RegExp(r'^\++'), '') : '';
   final changelogPath = 'CHANGELOG.md';
   final file = File(changelogPath);
   if (!file.existsSync()) {

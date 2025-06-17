@@ -10,19 +10,19 @@
 ## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ##.title~
 
-name: Publish to pub.dev
+**/.dart_tool/
+**/.DS_Store
+**/build/
+**/pubspec.lock
+**/.github/.git
+**/.metadata
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/pubspec_overrides.yaml
 
-## -----------------------------------------------------------------------------
+# Don't support IntelliJ.
+**/*.iml
+**/*.idea/
 
-on:
-  push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+*"
-
-## -----------------------------------------------------------------------------
-
-jobs:
-  publish:
-    permissions:
-      id-token: write
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+# custom_lint
+custom_lint.log

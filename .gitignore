@@ -23,3 +23,6 @@
 # Don't support IntelliJ.
 **/*.iml
 **/*.idea/
+
+# custom_lint
+custom_lint.log

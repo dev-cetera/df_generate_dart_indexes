@@ -11,15 +11,25 @@
 ##.title~
 
 name: generate_dart_indexes
+homepage: https://dev-cetera.com/
+repository: https://github.com/robmllze/df_generate_dart_indexes
+funding:
+  - https://www.buymeacoffee.com/dev_cetera
 publish_to: none
 
 ## -----------------------------------------------------------------------------
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 
 ## -----------------------------------------------------------------------------
 
 dependencies:
   df_generate_dart_indexes:
     path: ../
+
+## -----------------------------------------------------------------------------
+
+dev_dependencies:
+  lints: ^6.0.0
+
