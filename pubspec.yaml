@@ -32,9 +32,9 @@ environment:
 ## -----------------------------------------------------------------------------
 
 dependencies:
-  df_config: ^0.7.2
-  df_gen_core: ^0.6.10
-  df_log: ^0.3.12
+  df_config: ^0.7.3
+  df_gen_core: ^0.6.12
+  df_log: ^0.3.13
   args: ^2.7.0
   path: ^1.9.1
 
