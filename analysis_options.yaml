@@ -43,6 +43,7 @@ analyzer:
     - build/**
 
   errors:
+    unused_label: ignore
     always_declare_return_types: error
     avoid_renaming_method_parameters: error
     avoid_type_to_string: error
