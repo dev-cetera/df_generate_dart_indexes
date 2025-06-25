@@ -48,7 +48,7 @@ jobs:
 
       # Build the web app in /hosted_example/
       - name: Build web app in /hosted_example/
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+        run: flutter build web --release --wasm --base-href "/${{ github.event.repository.name }}/"
         working-directory: ./hosted_example
 
       # Necessary
