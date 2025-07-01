@@ -18,7 +18,7 @@ funding:
   - https://www.patreon.com/c/RobertMollentze
   - https://github.com/sponsors/robmllze
 description: A tool to generate index/exports files also known as barrel files for all Dart files in a directory.
-version: 0.6.1
+version: 0.6.2
 topics:
   - barrel-file
   - build-runner
