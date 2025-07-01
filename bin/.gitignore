@@ -10,19 +10,29 @@
 ## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ##.title~
 
-**/.dart_tool/
+# MacOS.
 **/.DS_Store
-**/build/
-**/pubspec.lock
-**/.github/.git
-**/.metadata
+
+# Dart & Flutter.
+**/.dart_tool/
 **/.flutter-plugins
 **/.flutter-plugins-dependencies
+**/.metadata
+**/.pub-cache/
+**/.pub/
+**/build/
 **/pubspec_overrides.yaml
-
-# Don't support IntelliJ.
-**/*.iml
-**/*.idea/
-
-# custom_lint
+**/pubspec.lock
 **/custom_lint.log
+
+# GitHub.
+**/.github/.git
+
+# Firebase.
+**/.firebase
+**/firebase-debug.log
+
+# Android
+/android/app/debug
+/android/app/profile
+/android/app/release

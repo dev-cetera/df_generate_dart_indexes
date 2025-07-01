@@ -7,5 +7,5 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
 
-export 'gen_indexes_ts.dart';
-export 'gen_indexes.dart';
+export 'generate_dart_indexes_ts.dart';
+export 'generate_dart_indexes.dart';

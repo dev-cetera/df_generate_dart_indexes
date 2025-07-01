@@ -18,18 +18,19 @@ import 'package:path/path.dart' as p;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-Future<void> genIndexes(
+Future<void> generateDartIndexesTs(
   List<String> args, {
   required List<String> defaultTemplates,
 }) async {
+  Log.enableReleaseAsserts = true;
   final parser = CliParser(
     title: 'dev-cetera.com/df/tools',
     description:
-        'A tool for generating index/barrel files for Dart. Ignores files that starts with underscores.',
-    example: 'gen-indexes -i .',
+        'A tool for generating index/barrel files for TypeScript. Ignores files that starts with underscores.',
+    example: 'gen-indexes-ts -i .',
     params: [
-      DefaultFlags.HELP.flag.copyWith(negatable: true),
-      DefaultOptions.INPUT_PATH.option.copyWith(
+      DefaultFlags.HELP.flag,
+      DefaultOptionParams.INPUT_PATH.option.copyWith(
         defaultsTo: FileSystemUtility.i.currentDir,
       ),
       DefaultMultiOptions.TEMPLATES.multiOption.copyWith(
@@ -55,7 +56,7 @@ Future<void> genIndexes(
   late final String inputPath;
   late final List<String> templates;
   try {
-    inputPath = argResults.option(DefaultOptions.INPUT_PATH.name)!;
+    inputPath = argResults.option(DefaultOptionParams.INPUT_PATH.name)!;
     templates = argResults.multiOption(DefaultMultiOptions.TEMPLATES.name);
   } catch (_) {
     _print(
@@ -67,26 +68,22 @@ Future<void> genIndexes(
 
   // ---------------------------------------------------------------------------
 
-  final spinner = Spinner();
-  spinner.start();
-
-  // ---------------------------------------------------------------------------
-
   _print(Log.printWhite, 'Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
+    print(e);
     final path = p.relative(e.path, from: inputPath);
     return _isAllowedFileName(path);
   });
+
   List<FilePathExplorerFinding> findings;
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(Log.printRed, 'Failed to read file tree!', spinner);
+    _print(Log.printRed, 'Failed to read file tree!');
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
-    spinner.stop();
     _print(Log.printYellow, 'No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
@@ -95,28 +92,31 @@ Future<void> genIndexes(
 
   final templateData = <String, String>{};
   for (final template in templates) {
-    _print(Log.printWhite, 'Reading template at: $template...');
-    final result = await MdTemplateUtility.i
-        .readTemplateFromPathOrUrl(template)
-        .value;
+    var t = template.trim().toLowerCase();
+    switch (t) {
+      case 'index':
+        t = 'https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/templates/index.ts.md';
+        break;
+      default:
+        break;
+    }
+
+    _print(Log.printWhite, 'Reading template at: $t...');
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(t).value;
 
     if (result.isErr()) {
-      spinner.stop();
       _print(Log.printRed, ' Failed to read template!');
       exit(ExitCodes.FAILURE.code);
     }
-    templateData[template] = result.unwrap();
+    templateData[t] = result.unwrap();
   }
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printWhite, 'Generating...', spinner);
-  final inputBasename = p.basename(inputPath);
+  _print(Log.printWhite, 'Generating...');
+
   for (final entry in templateData.entries) {
-    final fileName = p
-        .basename(entry.key)
-        .replaceAll('.md', '')
-        .replaceAll('{basename}', inputBasename.replaceFirst(r'^_+', ''));
+    final fileName = p.basename(entry.key).replaceAll('.md', '');
     final template = entry.value;
     final skipPath = p.join(inputPath, fileName);
     // ignore: invalid_use_of_internal_member
@@ -125,34 +125,28 @@ Future<void> genIndexes(
         inputPath,
         findings.map((e) => e.path).where((e) => e != skipPath),
         (e) => true,
-        (e) {
-          final unixPath = p.split(e).join('/');
-          return 'export \'./$unixPath\';';
-        },
+        (e) => 'export * from \'./$e\';',
       ),
     });
-
-    _print(Log.printWhite, 'Writing output to $fileName...', spinner);
+    _print(Log.printWhite, 'Writing output to $fileName...');
     try {
       await FileSystemUtility.i.writeLocalFile(fileName, data);
     } catch (e) {
-      _print(Log.printRed, 'Failed to write at: $fileName', spinner);
+      _print(Log.printRed, 'Failed to write at: $fileName');
       exit(ExitCodes.FAILURE.code);
     }
   }
 
   // ---------------------------------------------------------------------------
 
-  spinner.stop();
+  // [STEP 11] Print success!
   _print(Log.printGreen, 'Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-void _print(void Function(String) print, String message, [Spinner? spinner]) {
-  spinner?.stop();
-  print('[gen-indexes] $message');
-  spinner?.start();
+void _print(void Function(String) print, String message) {
+  print('[gen-indexes-ts] $message');
 }
 
 String _publicExports(
@@ -173,6 +167,6 @@ bool _isAllowedFileName(String e) {
   final lc = e.toLowerCase();
   return !lc.startsWith('_') &&
       !lc.contains('${p.separator}_') &&
-      !lc.endsWith('.g.dart') &&
-      lc.endsWith('.dart');
+      !lc.endsWith('.g.ts') &&
+      lc.endsWith('.ts');
 }
