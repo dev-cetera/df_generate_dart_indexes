@@ -61,7 +61,9 @@ Future<void> generateDartIndexes(
     inputPath = argResults.option(DefaultOptionParams.INPUT_PATH.name)!;
     templates = argResults.multiOption(DefaultMultiOptions.TEMPLATES.name);
   } catch (_) {
-    Log.printRed('Missing required args! Use --help flag for more information.');
+    Log.printRed(
+      'Missing required args! Use --help flag for more information.',
+    );
     exit(ExitCodes.FAILURE.code);
   }
 
@@ -90,7 +92,9 @@ Future<void> generateDartIndexes(
   final templateData = <String, String>{};
   for (final template in templates) {
     Log.printWhite('Reading template at: $template...');
-    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
+    final result = await MdTemplateUtility.i
+        .readTemplateFromPathOrUrl(template)
+        .value;
 
     if (result.isErr()) {
       Log.printRed(' Failed to read template!');
@@ -104,7 +108,10 @@ Future<void> generateDartIndexes(
   Log.printWhite('Generating...');
   final inputBasename = p.basename(inputPath);
   for (final entry in templateData.entries) {
-    final fileName = p.basename(entry.key).replaceAll('.md', '').replaceAll(
+    final fileName = p
+        .basename(entry.key)
+        .replaceAll('.md', '')
+        .replaceAll(
           '{basename}',
           inputBasename.replaceFirst(RegExp(r'^_+'), ''),
         );
@@ -114,7 +121,8 @@ Future<void> generateDartIndexes(
     final data = template.replaceData({
       '___PUBLIC_EXPORTS___': _publicExports(
         inputPath,
-        findings.map((e) => e.path).where((e) => e != skipPath).toList()..sort(),
+        findings.map((e) => e.path).where((e) => e != skipPath).toList()
+          ..sort(),
         (e) => true,
         (e) {
           final unixPath = p.split(e).join('/');
