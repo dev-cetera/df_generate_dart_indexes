@@ -120,14 +120,18 @@ Future<void> generateDartIndexes(
     final fileName = p
         .basename(entry.key)
         .replaceAll('.md', '')
-        .replaceAll('{basename}', inputBasename.replaceFirst(RegExp(r'^_+'), ''));
+        .replaceAll(
+          '{basename}',
+          inputBasename.replaceFirst(RegExp(r'^_+'), ''),
+        );
     final template = entry.value;
     final skipPath = p.join(inputPath, fileName);
     // ignore: invalid_use_of_internal_member
     final data = template.replaceData({
       '___PUBLIC_EXPORTS___': _publicExports(
         inputPath,
-        findings.map((e) => e.path).where((e) => e != skipPath).toList()..sort(),
+        findings.map((e) => e.path).where((e) => e != skipPath).toList()
+          ..sort(),
         (e) => true,
         (e) {
           final unixPath = p.split(e).join('/');
