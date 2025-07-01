@@ -17,7 +17,7 @@ import 'package:df_generate_dart_indexes/df_generate_dart_indexes.dart';
 void main(
   List<String> args, {
   List<String> defaultTemplates = const [
-    'https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/templates/_index.g.dart.md',
+    'https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/templates/_{basename}.g.dart.md',
   ],
 }) async {
   await generateDartIndexes(args, defaultTemplates: defaultTemplates);

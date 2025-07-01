@@ -92,23 +92,14 @@ Future<void> generateDartIndexesTs(
 
   final templateData = <String, String>{};
   for (final template in templates) {
-    var t = template.trim().toLowerCase();
-    switch (t) {
-      case 'index':
-        t = 'https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/templates/index.ts.md';
-        break;
-      default:
-        break;
-    }
-
-    _print(Log.printWhite, 'Reading template at: $t...');
-    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(t).value;
+    _print(Log.printWhite, 'Reading template at: $template...');
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       _print(Log.printRed, ' Failed to read template!');
       exit(ExitCodes.FAILURE.code);
     }
-    templateData[t] = result.unwrap();
+    templateData[template] = result.unwrap();
   }
 
   // ---------------------------------------------------------------------------

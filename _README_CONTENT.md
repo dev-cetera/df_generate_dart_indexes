@@ -7,8 +7,7 @@ A tool to generate index/exports files also known as barrel files for all Dart f
 1. No need to add this package to your `pubspec.yaml`.
 2. Activate it by running: `dart pub global activate df_generate_dart_indexes`.
 3. In your project, open a terminal in the desired folder (Tip: In VS Code, right-click a folder and select `"Open in Integrated Terminal"`).
-4. Run `df_generate_dart_indexes` to generate a barrel file matching the folder’s base name, e.g. `_src.g.dart` or `_widgets.g.dart`.
-5. Bonus: You can also generate TypeScript index files by running `df_generate_dart_indexes_ts`. This is mainly focused on Dart. Other langauges not yet supported.
+4. Run `--barrel` to generate a barrel file matching the folder’s base name, e.g. `_src.g.dart` or `_widgets.g.dart`.
 
 ### Note:
 
