@@ -24,10 +24,10 @@ Future<void> generateDartIndexes(
 }) async {
   Log.enableReleaseAsserts = true;
   final parser = CliParser(
-    title: 'dev-cetera.com/df/tools',
+    title: 'dev-cetera.com',
     description:
         'A tool for generating index/barrel files for Dart. Ignores files that starts with underscores.',
-    example: 'gen-indexes -i .',
+    example: 'df_generate_dart_indexes -i .',
     params: [
       DefaultFlags.HELP.flag,
       DefaultOptionParams.INPUT_PATH.option.copyWith(
@@ -49,7 +49,7 @@ Future<void> generateDartIndexes(
 
   final help = argResults.flag(DefaultFlags.HELP.name);
   if (help) {
-    _print(Log.printCyan, parser.getInfo(argParser));
+    Log.printCyan(parser.getInfo(argParser));
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -61,16 +61,13 @@ Future<void> generateDartIndexes(
     inputPath = argResults.option(DefaultOptionParams.INPUT_PATH.name)!;
     templates = argResults.multiOption(DefaultMultiOptions.TEMPLATES.name);
   } catch (_) {
-    _print(
-      Log.printRed,
-      'Missing required args! Use --help flag for more information.',
-    );
+    Log.printRed('Missing required args! Use --help flag for more information.');
     exit(ExitCodes.FAILURE.code);
   }
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printWhite, 'Looking for files..');
+  Log.printWhite('Looking for files..');
   final filePathStream0 = PathExplorer(inputPath).exploreFiles();
   final filePathStream1 = filePathStream0.where((e) {
     final path = p.relative(e.path, from: inputPath);
@@ -80,11 +77,11 @@ Future<void> generateDartIndexes(
   try {
     findings = await filePathStream1.toList();
   } catch (e) {
-    _print(Log.printRed, 'Failed to read file tree!');
+    Log.printRed('Failed to read file tree!');
     exit(ExitCodes.FAILURE.code);
   }
   if (findings.isEmpty) {
-    _print(Log.printYellow, 'No files found in $inputPath!');
+    Log.printYellow('No files found in $inputPath!');
     exit(ExitCodes.SUCCESS.code);
   }
 
@@ -92,13 +89,11 @@ Future<void> generateDartIndexes(
 
   final templateData = <String, String>{};
   for (final template in templates) {
-    _print(Log.printWhite, 'Reading template at: $template...');
-    final result = await MdTemplateUtility.i
-        .readTemplateFromPathOrUrl(template)
-        .value;
+    Log.printWhite('Reading template at: $template...');
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
-      _print(Log.printRed, ' Failed to read template!');
+      Log.printRed(' Failed to read template!');
       exit(ExitCodes.FAILURE.code);
     }
     templateData[template] = result.unwrap();
@@ -106,13 +101,10 @@ Future<void> generateDartIndexes(
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printWhite, 'Generating...');
+  Log.printWhite('Generating...');
   final inputBasename = p.basename(inputPath);
   for (final entry in templateData.entries) {
-    final fileName = p
-        .basename(entry.key)
-        .replaceAll('.md', '')
-        .replaceAll(
+    final fileName = p.basename(entry.key).replaceAll('.md', '').replaceAll(
           '{basename}',
           inputBasename.replaceFirst(RegExp(r'^_+'), ''),
         );
@@ -122,8 +114,7 @@ Future<void> generateDartIndexes(
     final data = template.replaceData({
       '___PUBLIC_EXPORTS___': _publicExports(
         inputPath,
-        findings.map((e) => e.path).where((e) => e != skipPath).toList()
-          ..sort(),
+        findings.map((e) => e.path).where((e) => e != skipPath).toList()..sort(),
         (e) => true,
         (e) {
           final unixPath = p.split(e).join('/');
@@ -132,25 +123,21 @@ Future<void> generateDartIndexes(
       ),
     });
 
-    _print(Log.printWhite, 'Writing output to $fileName...');
+    Log.printWhite('Writing output to $fileName...');
     try {
       await FileSystemUtility.i.writeLocalFile(fileName, data);
     } catch (e) {
-      _print(Log.printRed, 'Failed to write at: $fileName');
+      Log.printRed('Failed to write at: $fileName');
       exit(ExitCodes.FAILURE.code);
     }
   }
 
   // ---------------------------------------------------------------------------
 
-  _print(Log.printGreen, 'Done!');
+  Log.printGreen('Done!');
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-void _print(void Function(String) print, String message) {
-  print('[gen-indexes] $message');
-}
 
 String _publicExports(
   String inputPath,
