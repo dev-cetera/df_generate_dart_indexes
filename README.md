@@ -11,6 +11,8 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 
 ---
 
+[![banner](https://github.com/dev-cetera/df_safer_dart/blob/v0.6.2/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+
 <!-- BEGIN _README_CONTENT -->
 
 A tool to generate index/exports files also known as barrel files for all Dart files in a directory.
@@ -89,3 +91,4 @@ If you're enjoying this package and find it valuable, consider showing your appr
 ## 🧑‍⚖️ License
 
 This project is released under the [MIT License](https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/LICENSE). See [LICENSE](https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/LICENSE) for more information.
+
