@@ -1,9 +1,10 @@
 //.title
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //
-// Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
-// source code is governed by an MIT-style license described in the LICENSE
-// file located in this project's root directory.
+// Copyright © dev-cetera.com & contributors.
+//
+// The use of this source code is governed by an MIT-style license described in
+// the LICENSE file located in this project's root directory.
 //
 // See: https://opensource.org/license/mit
 //
@@ -92,9 +93,7 @@ Future<void> generateDartIndexesTs(
   final templateData = <String, String>{};
   for (final template in templates) {
     Log.printWhite('Reading template at: $template...');
-    final result = await MdTemplateUtility.i
-        .readTemplateFromPathOrUrl(template)
-        .value;
+    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       Log.printRed(' Failed to read template!');

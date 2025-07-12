@@ -1,9 +1,10 @@
 ##.title
 ## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ##
-## Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
-## source code is governed by an MIT-style license described in the LICENSE
-## file located in this project's root directory.
+## Copyright © dev-cetera.com & contributors.
+##
+## The use of this source code is governed by an MIT-style license described in
+## the LICENSE file located in this project's root directory.
 ##
 ## See: https://opensource.org/license/mit
 ##
@@ -57,3 +58,6 @@ analyzer:
     unnecessary_new: error
     unrelated_type_equality_checks: error
     use_key_in_widget_constructors: error
+
+formatter:
+  trailing_commas: preserve
