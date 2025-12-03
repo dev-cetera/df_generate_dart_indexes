@@ -15,9 +15,11 @@ name: generate_dart_indexes
 homepage: https://dev-cetera.com/
 repository: https://github.com/robmllze/df_generate_dart_indexes
 funding:
+- https://www.patreon.com/c/t0mb3rr
+- https://github.com/sponsors/t0mb3rr
 - https://www.buymeacoffee.com/dev_cetera
-- https://www.patreon.com/c/RobertMollentze
-- https://github.com/sponsors/robmllze
+
+
 publish_to: none
 
 ## -----------------------------------------------------------------------------

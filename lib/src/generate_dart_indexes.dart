@@ -11,10 +11,10 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
 
-import 'package:df_gen_core/df_gen_core.dart';
 // ignore: implementation_imports
 import 'package:df_config/src/_etc/replace_data.dart';
 
+import 'package:df_gen_core/df_gen_core.dart';
 import 'package:path/path.dart' as p;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -93,7 +93,8 @@ Future<void> generateDartIndexes(
   final templateData = <String, String>{};
   for (final template in templates) {
     Log.printWhite('Reading template at: $template...');
-    final result = await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
+    final result =
+        await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       Log.printRed(' Failed to read template!');
@@ -117,7 +118,8 @@ Future<void> generateDartIndexes(
     final data = template.replaceData({
       '___PUBLIC_EXPORTS___': _publicExports(
         inputPath,
-        findings.map((e) => e.path).where((e) => e != skipPath).toList()..sort(),
+        findings.map((e) => e.path).where((e) => e != skipPath).toList()
+          ..sort(),
         (e) => true,
         (e) {
           final unixPath = p.split(e).join('/');
