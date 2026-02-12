@@ -13,13 +13,15 @@
 
 name: df_generate_dart_indexes
 homepage: https://dev-cetera.com/
-repository: https://github.com/robmllze/df_generate_dart_indexes
 funding:
 - https://www.buymeacoffee.com/dev_cetera
-- https://www.patreon.com/c/t0mb3rr
-- https://github.com/sponsors/t0mb3rr
+- https://www.patreon.com/c/robelator
+- https://github.com/sponsors/robelator
+- https://www.buymeacoffee.com/dev_cetera
+- https://www.patreon.com/c/robelator
+- https://github.com/sponsors/robelator
 description: A tool to generate index/exports files also known as barrel files for all Dart files in a directory.
-version: 0.6.3
+version: 0.6.4
 topics:
   - barrel-file
   - build-runner

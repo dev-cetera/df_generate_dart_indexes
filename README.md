@@ -1,10 +1,10 @@
-[![banner](https://github.com/dev-cetera/df_generate_dart_indexes/blob/v0.6.3/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_generate_dart_indexes/blob/v0.6.4/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 [![pub](https://img.shields.io/pub/v/df_generate_dart_indexes.svg)](https://pub.dev/packages/df_generate_dart_indexes)
-[![tag](https://img.shields.io/badge/Tag-v0.6.3-purple?logo=github)](https://github.com/dev-cetera/df_generate_dart_indexes/tree/v0.6.3)
+[![tag](https://img.shields.io/badge/Tag-v0.6.4-purple?logo=github)](https://github.com/dev-cetera/df_generate_dart_indexes/tree/v0.6.4)
 [![buymeacoffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dev_cetera)
 [![sponsor](https://img.shields.io/badge/Sponsor-grey?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
-[![patreon](https://img.shields.io/badge/Patreon-grey?logo=patreon)](https://www.patreon.com/t0mb3rr)
+[![patreon](https://img.shields.io/badge/Patreon-grey?logo=patreon)](https://www.patreon.com/robelator)
 [![discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/gEQ8y2nfyX)
 [![instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/dev_cetera/)
 [![license](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/LICENSE)
@@ -53,7 +53,6 @@ export './screens/home_screen/widget.dart';
 export './widgets/my_button.dart';
 export './widgets/my_title_text.dart';
 ```
-
 
 <!-- END _README_CONTENT -->
 

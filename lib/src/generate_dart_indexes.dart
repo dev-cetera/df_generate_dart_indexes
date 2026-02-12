@@ -93,9 +93,8 @@ Future<void> generateDartIndexes(
   final templateData = <String, String>{};
   for (final template in templates) {
     Log.printWhite('Reading template at: $template...');
-    final result = await MdTemplateUtility.i
-        .readTemplateFromPathOrUrl(template)
-        .value;
+    final result =
+        await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       Log.printRed(' Failed to read template!');
@@ -109,10 +108,7 @@ Future<void> generateDartIndexes(
   Log.printWhite('Generating...');
   final inputBasename = p.basename(inputPath);
   for (final entry in templateData.entries) {
-    final fileName = p
-        .basename(entry.key)
-        .replaceAll('.md', '')
-        .replaceAll(
+    final fileName = p.basename(entry.key).replaceAll('.md', '').replaceAll(
           '{basename}',
           inputBasename.replaceFirst(RegExp(r'^_+'), ''),
         );

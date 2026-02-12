@@ -1,4 +1,5 @@
-# Dev-Cetera analysis_options.yaml for Dart - Version 1
+# For dev-cetera.com
+# Version: 1
 
 include: package:lints/recommended.yaml
 
@@ -9,7 +10,6 @@ linter:
     avoid_web_libraries_in_flutter: true
     camel_case_types: false
     constant_identifier_names: false
-    directives_ordering: true
     file_names: false
     library_private_types_in_public_api: false
     non_constant_identifier_names: false
@@ -19,6 +19,7 @@ linter:
     prefer_final_fields: true
     prefer_function_declarations_over_variables: false
     prefer_relative_imports: true
+    prefer_single_quotes: true
     require_trailing_commas: true
     unawaited_futures: true
     unnecessary_this: true
@@ -32,24 +33,24 @@ analyzer:
     strict-raw-types: true
   exclude:
     - build/**
+    # - '**.g.dart'
 
   errors:
     always_declare_return_types: error
     avoid_renaming_method_parameters: error
     avoid_type_to_string: error
+    close_sinks: error
+    collection_methods_unrelated_type: error
     depend_on_referenced_packages: error
     flutter_style_todos: error
     invalid_override_of_non_virtual_member: error
     invalid_use_of_protected_member: error
+    missing_return: error
     no_leading_underscores_for_local_identifiers: error
     prefer_final_in_for_each: error
     prefer_relative_imports: error
-    prefer_single_quotes: error
-    unnecessary_async: error
-    unnecessary_await_in_return: error
-    unnecessary_late: error
+    record_literal_one_positional_no_trailing_comma: error
     unnecessary_new: error
-    unnecessary_unawaited: error
     unrelated_type_equality_checks: error
     unused_label: ignore
     use_key_in_widget_constructors: error
