@@ -11,9 +11,6 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
 
-// ignore: implementation_imports
-import 'package:df_config/src/_etc/replace_data.dart';
-
 import 'package:df_gen_core/df_gen_core.dart';
 import 'package:path/path.dart' as p;
 
@@ -93,9 +90,8 @@ Future<void> generateDartIndexes(
   final templateData = <String, String>{};
   for (final template in templates) {
     Log.printWhite('Reading template at: $template...');
-    final result = await MdTemplateUtility.i
-        .readTemplateFromPathOrUrl(template)
-        .value;
+    final result =
+        await MdTemplateUtility.i.readTemplateFromPathOrUrl(template).value;
 
     if (result.isErr()) {
       Log.printRed(' Failed to read template!');
@@ -107,22 +103,26 @@ Future<void> generateDartIndexes(
   // ---------------------------------------------------------------------------
 
   Log.printWhite('Generating...');
-  final inputBasename = p.basename(inputPath);
+  // Resolve the input path to its absolute, normalised form so that the
+  // `{basename}` template variable yields the actual folder name even when
+  // the user passes `-i .` (where `p.basename('.')` would just give `.`,
+  // producing nonsense filenames like `_..g.dart`).
+  final inputBasename = p.basename(p.normalize(p.absolute(inputPath)));
   for (final entry in templateData.entries) {
-    final fileName = p
-        .basename(entry.key)
-        .replaceAll('.md', '')
-        .replaceAll(
+    final fileName = p.basename(entry.key).replaceAll('.md', '').replaceAll(
           '{basename}',
           inputBasename.replaceFirst(RegExp(r'^_+'), ''),
         );
     final template = entry.value;
-    final skipPath = p.join(inputPath, fileName);
-    // ignore: invalid_use_of_internal_member
+    // The barrel file lives INSIDE the input directory — its exports are
+    // relative paths like `./foo.dart` resolved from the barrel's own
+    // location, so writing the file to CWD would break every export when
+    // `inputPath != cwd`.
+    final outputPath = p.join(inputPath, fileName);
     final data = template.replaceData({
       '___PUBLIC_EXPORTS___': _publicExports(
         inputPath,
-        findings.map((e) => e.path).where((e) => e != skipPath).toList()
+        findings.map((e) => e.path).where((e) => e != outputPath).toList()
           ..sort(),
         (e) => true,
         (e) {
@@ -132,11 +132,11 @@ Future<void> generateDartIndexes(
       ),
     });
 
-    Log.printWhite('Writing output to $fileName...');
+    Log.printWhite('Writing output to $outputPath...');
     try {
-      await FileSystemUtility.i.writeLocalFile(fileName, data);
+      await FileSystemUtility.i.writeLocalFile(outputPath, data);
     } catch (e) {
-      Log.printRed('Failed to write at: $fileName');
+      Log.printRed('Failed to write at: $outputPath');
       exit(ExitCodes.FAILURE.code);
     }
   }

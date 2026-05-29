@@ -1,0 +1,58 @@
+# Publishes to pub.dev. Triggered exclusively by the push of a tag matching
+# `v{X.Y.Z}` (or `v{X.Y.Z+build}`). The companion `prod.yml` workflow is what
+# normally creates those tags, but a maintainer can also tag manually if they
+# want to ship without going through the prod branch.
+#
+# pub.dev's "Automated publishing" must be enabled with:
+#   Repository:    <owner>/<repo>
+#   Tag pattern:   v{{version}}
+# pub.dev verifies the OIDC token against that tag pattern, so a publish from
+# any other context (e.g. a forked PR, a branch push) will be rejected by
+# pub.dev itself — defense in depth.
+
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'        # v1.2.3
+      - 'v[0-9]+.[0-9]+.[0-9]+\+*'     # v1.2.3+4
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for the OIDC token that authenticates pub.dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      # Defensive re-test: the prod.yml workflow already gated on these, but
+      # someone could have hand-tagged an arbitrary commit. We want a hard
+      # guarantee that what we ship to pub.dev compiles and passes tests.
+      - name: Static analysis
+        run: dart analyze --fatal-infos
+
+      - name: Run tests
+        run: dart test
+
+      - name: Verify pubspec version matches tag
+        run: |
+          PUBSPEC_VERSION=$(grep -E '^version:' pubspec.yaml | sed -E 's/^version:[[:space:]]*//; s/[[:space:]]+$//')
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [[ "$PUBSPEC_VERSION" != "$TAG_VERSION" ]]; then
+            echo "::error::pubspec version ($PUBSPEC_VERSION) does not match tag (v$TAG_VERSION)"
+            exit 1
+          fi
+          echo "pubspec.yaml version matches tag: v${PUBSPEC_VERSION}"
+
+      - name: Publish to pub.dev
+        run: dart pub publish --force

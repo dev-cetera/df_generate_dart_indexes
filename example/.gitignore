@@ -1,0 +1,39 @@
+##.title
+## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+##
+## Copyright © dev-cetera.com & contributors.
+##
+## The use of this source code is governed by an MIT-style license described in
+## the LICENSE file located in this project's root directory.
+##
+## See: https://opensource.org/license/mit
+##
+## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+##.title~
+
+# MacOS.
+**/.DS_Store
+
+# Dart & Flutter.
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.metadata
+**/.pub-cache/
+**/.pub/
+**/build/
+**/pubspec_overrides.yaml
+**/pubspec.lock
+**/custom_lint.log
+
+# GitHub.
+**/.github/.git
+
+# Firebase.
+**/.firebase
+**/firebase-debug.log
+
+# Android
+/android/app/debug
+/android/app/profile
+/android/app/release

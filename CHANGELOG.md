@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.7.0]
+
+- Released @ 5/2026 (UTC)
+- Pulls in df_gen_core 0.8.0 with mapper robustness fixes
+
 ## [0.6.3]
 
 - Released @ 12/2025 (UTC)
