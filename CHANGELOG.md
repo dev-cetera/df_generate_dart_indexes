@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.7.1]
+
+- chore: bump `df_gen_core` to `^0.8.1`, which adopts `df_string ^0.4.0` (case-conversion digit-boundary change). No behavioural change to barrel-file generation.
+
 ## [0.7.0]
 
 - Released @ 5/2026 (UTC)
