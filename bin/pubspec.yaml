@@ -13,13 +13,7 @@
 
 name: generate_dart_indexes
 homepage: https://dev-cetera.com/
-funding:
-- https://www.buymeacoffee.com/dev_cetera
-- https://www.patreon.com/c/robelator
-- https://github.com/sponsors/robelator
-- https://www.patreon.com/c/robelator
-- https://github.com/sponsors/robelator
-- https://www.buymeacoffee.com/dev_cetera
+repository: https://github.com/dev-cetera/df_generate_dart_indexes
 
 
 publish_to: none

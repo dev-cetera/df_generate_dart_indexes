@@ -1,8 +1,5 @@
 [![pub](https://img.shields.io/pub/v/df_generate_dart_indexes.svg)](https://pub.dev/packages/df_generate_dart_indexes)
-[![tag](https://img.shields.io/badge/Tag-v0.7.0-purple?logo=github)](https://github.com/dev-cetera/df_generate_dart_indexes/tree/v0.7.0)
-[![buymeacoffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dev_cetera)
-[![sponsor](https://img.shields.io/badge/Sponsor-grey?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
-[![patreon](https://img.shields.io/badge/Patreon-grey?logo=patreon)](https://www.patreon.com/robelator)
+[![tag](https://img.shields.io/badge/Tag-v0.8.0-purple?logo=github)](https://github.com/dev-cetera/df_generate_dart_indexes/tree/v0.8.0)
 [![discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/gEQ8y2nfyX)
 [![instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/dev_cetera/)
 [![license](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/LICENSE)
@@ -55,11 +52,11 @@ This is an open-source project, and we warmly welcome contributions from everyon
 
 No matter how you choose to contribute, your involvement is greatly appreciated and valued!
 
-### ☕ We drink a lot of coffee...
+## 👤 Author & Contact
 
-If you're enjoying this package and find it valuable, consider showing your appreciation with a small donation. Every bit helps in supporting future development. You can donate here: https://www.buymeacoffee.com/dev_cetera
-
-<a href="https://www.buymeacoffee.com/dev_cetera" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="40"></a>
+- Website: [robertsolves.com.au](https://robertsolves.com.au)
+- Organization: [dev-cetera.com](https://dev-cetera.com)
+- Email: [robert@dev-cetera.com](mailto:robert@dev-cetera.com) or [hello@robertsolves.com.au](mailto:hello@robertsolves.com.au)
 
 ## LICENSE
 

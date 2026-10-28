@@ -1,5 +1,6 @@
 name: df_generate_dart_indexes_example
 homepage: https://dev-cetera.com/
+repository: https://github.com/dev-cetera/df_generate_dart_indexes
 publish_to: none
 version: 0.1.0
 environment:
