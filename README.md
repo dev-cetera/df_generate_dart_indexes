@@ -1,6 +1,5 @@
 [![pub](https://img.shields.io/pub/v/df_generate_dart_indexes.svg)](https://pub.dev/packages/df_generate_dart_indexes)
 [![tag](https://img.shields.io/badge/Tag-v0.8.0-purple?logo=github)](https://github.com/dev-cetera/df_generate_dart_indexes/tree/v0.8.0)
-[![discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/gEQ8y2nfyX)
 [![instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/dev_cetera/)
 [![license](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_generate_dart_indexes/main/LICENSE)
 
@@ -42,7 +41,8 @@ This is an open-source project, and we warmly welcome contributions from everyon
 
 ### ☝️ Ways you can contribute
 
-- **Find us on Discord:** Feel free to ask questions and engage with the community here: https://discord.gg/gEQ8y2nfyX.
+- **Raise a ticket:** Open an issue on the [GitHub repository](https://github.com/dev-cetera/df_generate_dart_indexes/issues) for questions, bugs and feature requests.
+- **Get in touch:** Email [hello@robertsolves.com.au](mailto:hello@robertsolves.com.au) if you would like to contribute or collaborate.
 - **Share your ideas:** Every perspective matters, and your ideas can spark innovation.
 - **Help others:** Engage with other users by offering advice, solutions, or troubleshooting assistance.
 - **Report bugs:** Help us identify and fix issues to make the project more robust.
