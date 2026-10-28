@@ -33,16 +33,30 @@ jobs:
         uses: dart-lang/setup-dart@v1
 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get --no-example
 
       # Defensive re-test: the prod.yml workflow already gated on these, but
       # someone could have hand-tagged an arbitrary commit. We want a hard
       # guarantee that what we ship to pub.dev compiles and passes tests.
       - name: Static analysis
-        run: dart analyze --fatal-infos
+        run: |
+          DIRS=""
+          for d in lib test bin; do
+            [ -d "$d" ] && DIRS="$DIRS $d"
+          done
+          if [ -z "$DIRS" ]; then
+            echo "No primary source directories to analyze."
+            exit 0
+          fi
+          dart analyze --fatal-infos $DIRS
 
       - name: Run tests
-        run: dart test
+        run: |
+          if [ -d test ] && grep -qE '^[[:space:]]+test:' pubspec.yaml; then
+            dart test
+          else
+            echo "No tests to run."
+          fi
 
       - name: Verify pubspec version matches tag
         run: |

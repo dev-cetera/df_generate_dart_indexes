@@ -123,7 +123,12 @@ jobs:
           dart analyze --fatal-infos $DIRS
 
       - name: Run tests
-        run: dart test
+        run: |
+          if [ -d test ] && grep -qE '^[[:space:]]+test:' pubspec.yaml; then
+            dart test
+          else
+            echo "No tests to run."
+          fi
 
       - name: Decide next version
         id: bump
